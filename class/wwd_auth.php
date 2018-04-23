@@ -4,19 +4,25 @@
  * Date: 4/20/18
  */
 
-class wwd_auth {
-	private $PLUGIN_ROLE = 'WWDVIEW';
-	private $isAuthenticated = false;
-	private $username = '';
 
-	/**
-	 * wwd_auth constructor.
-	 */
+class wwd_auth {
+    // This is the required role for users allowed to view WWD Information.
+    private $PLUGIN_ROLE = 'WWDVIEW';
+
+    // Interal flag used to determine if the user is "authenticated",
+    // based on being a member of the role above.
+    private $isAuthenticated = false;
+    private $username = '';
+
 	public function __construct( ) {
 		$this->isAuthenticated = false;
+		$this->username = '';
 	}
 
-	public function isIsAuthenticated() {
+    /**
+     * @return bool
+     */
+    public function isIsAuthenticated() {
 		$this->checkAuth();
 		return $this->isAuthenticated;
 	}
@@ -41,7 +47,9 @@ class wwd_auth {
 	}
 
 	/**
-	 * @return string
+	 * return user name, obtained from the checkAuth() method.
+     * If the user is not authenticated, then the user name should
+     * be blank.
 	 */
 	public function getUsername() {
 		return $this->username;
