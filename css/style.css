@@ -1,0 +1,20 @@
+.zebra  tr:nth-child(even) {
+    color: #fff;
+    background-color: #2b8ad3;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.zebra td {
+    padding: 0 0 0 0;
+    border-radius: 2%
+}
+
+.zebra {
+
+}
+
+.zebra tr {
+    cursor: pointer;
+}
+
