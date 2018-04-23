@@ -109,33 +109,13 @@ class wwdLateralInfo {
     }
 }
 
-
-function wwd_render_lat($id) {
-    $auth = new wwd_auth();
-    $isAuth = $auth->isIsAuthenticated();
-}
-
-
-function wwd_lateral_qvars( $vars ) {
-    $vars[] = "id";
-    return $vars;
-}
-
-add_filter( 'query_vars', 'wwd_lateral_qvars' );
-
 function wwd_lateral()
 {
-    $info = 'lateral data here.';
-
     $id = get_query_var('id', '');
-
-    if ( $id > '' ) {
-        $info = $info . '<br>ID = ' . $id . '<br>';
-    }
 
     $latInfo = new wwdLateralInfo($id);
 
-    $info = $info . $latInfo->render();
+    $info = $latInfo->render();
     // wwd_render_lat($id);
 
     return $info;

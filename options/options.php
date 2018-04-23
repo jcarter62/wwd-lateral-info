@@ -9,6 +9,8 @@ function wwdLatInfoAdminPage()
     if ( array_key_exists('submit_admin_update', $_POST ) ) {
         update_option('wwd-apikey', $_POST['inp-apikey']);
         update_option('wwd-apiurl', $_POST['inp-apiurl']);
+        update_option('wwd-pagesize', $_POST['inp-pagesize']);
+
         ?>
         <div>Updated!!</div>
         <?php
@@ -16,6 +18,7 @@ function wwdLatInfoAdminPage()
 
     $apikey = get_option('wwd-apikey', '');
     $apiurl = get_option('wwd-apiurl', '');
+    $pagesize = get_option('wwd-pagesize', '');
 
     ?>
     <div class="wrap">
@@ -25,6 +28,8 @@ function wwdLatInfoAdminPage()
             <textarea name="inp-apiurl" class="large-text"><?php print $apiurl; ?></textarea>
             <label for="inp-apikey">KEY:</label>
             <textarea name="inp-apikey" class="large-text"><?php print $apikey; ?></textarea>
+            <label for="inp-pagesize">Page Size:</label>
+            <input type="number" name="inp-pagesize" class="large-text" placeholder="<?php print $pagesize; ?>">
             <input type="submit" name="submit_admin_update" class="button button-primary" value="UPDATE SCRIPTS">
         </form>
     </div>
