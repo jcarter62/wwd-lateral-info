@@ -1,6 +1,6 @@
 <?php
 
-class wwdAccounts {
+class wwdAccount {
     private $auth;
     private $isAuth = false;
     private $pagesize;

@@ -21,6 +21,7 @@ require WWD_LAT_INFO_DIR . '/options/options.php';
 // Classes
 require WWD_LAT_INFO_DIR . '/class/wwd_api_info.php';
 require WWD_LAT_INFO_DIR . '/class/wwd_auth.php';
+require WWD_LAT_INFO_DIR . '/class/wwd_page_foot.php';
 
 require WWD_LAT_INFO_DIR . '/includes/wwd-qvars.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-laterals.php';
