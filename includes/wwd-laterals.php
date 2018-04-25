@@ -9,8 +9,18 @@ class wwdLateralList {
      */
     public function __construct()
     {
+        add_shortcode('wwd-lat-list', array( $this,'execute') );
+    }
+
+
+    /**
+     * execute: Execute shortcode for this class.
+     */
+    public function execute()
+    {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
+        return $this->render();
     }
 
     private function fmt($x) {
@@ -32,15 +42,12 @@ class wwdLateralList {
         return $str;
     }
 
-
     private function cmp($a,$b) {
-
         $a0 = $this->fmt($a['LatName']);
         $b0 = $this->fmt($b['LatName']);
 
         return strcmp( $a0, $b0 );
     }
-
 
     //
     // Format data in $rows to be displayed
@@ -56,9 +63,7 @@ class wwdLateralList {
 
             $onclick = 'onclick="location.href=\'' . $link . '\'";';
             $result .= '<tr ><td '. $onclick . '>'
-//                . '<a href=' . $link . '>'
                 . $row["LatName"]
-//                . '</a>'
                 . '</td></tr>';
         }
 
@@ -66,7 +71,7 @@ class wwdLateralList {
         return $result;
     }
 
-    public function render() {
+    private function render() {
 
         if ( $this->isAuth ) {
 
@@ -122,10 +127,4 @@ class wwdLateralList {
     }
 }
 
-function wwd_list_laterals()
-{
-    $list = new wwdLateralList();
-    return $list->render();
-}
-
-add_shortcode('wwd-lat-list', 'wwd_list_laterals');
+$wwd_laterals = new wwdLateralList();
