@@ -1,15 +1,35 @@
 <?php
 
+/**
+ * Class wwdLateralInfo
+ */
 class wwdLateralInfo {
     private $auth;
     private $isAuth = false;
     private $id = '';
 
-    public function __construct($latId)
+    /**
+     * wwdLateralInfo constructor.
+     */
+    public function __construct()
     {
+        add_shortcode('wwd-lateral', array( $this, 'execute')) ;
+    }
+
+    /**
+     * Execute shortcode method, and return results.
+     * This shortcode generates a list of meters associated
+     * with the lateral id.
+     * @return List of meters
+     */
+    public function execute() {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
-        $this->id = $latId;
+
+        $this->id = get_query_var('id', '');
+        $info = $this->render();
+
+        return $info;
     }
 
     private function wwd_header() {
@@ -48,9 +68,10 @@ class wwdLateralInfo {
         return $result;
     }
 
-
-
-    public function render() {
+    /**
+     * @return Table of meters for lateral id.
+     */
+    private function render() {
         if ( $this->isAuth ) {
 
             // Load options, and present to users.
@@ -109,16 +130,4 @@ class wwdLateralInfo {
     }
 }
 
-function wwd_lateral()
-{
-    $id = get_query_var('id', '');
-
-    $latInfo = new wwdLateralInfo($id);
-
-    $info = $latInfo->render();
-    // wwd_render_lat($id);
-
-    return $info;
-}
-
-add_shortcode('wwd-lateral', 'wwd_lateral');
+$wwd_lateral = new wwdLateralInfo();
