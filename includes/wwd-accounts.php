@@ -5,14 +5,22 @@ class wwdAccounts {
     private $isAuth = false;
     private $pagesize;
     private $page;
+    private $search = '';
 
     public function __construct()
+    {
+        add_shortcode('wwd-accounts', array( $this,'execute'));
+    }
+
+    public function execute()
     {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
         $this->pagesize = get_option('wwd-pagesize',5);
-    }
+        $this->page = get_query_var('page', '0');
 
+        return $this->render($this->page);
+    }
     /**
      * @param Account Number
      * @return String, with '000' prepended to allow for better sorting.
@@ -28,7 +36,6 @@ class wwdAccounts {
         $b0 = $this->fmt($b['id']);
         return strcmp( $a0, $b0 );
     }
-
 
     //
     // Format data in $rows to be displayed
@@ -71,19 +78,13 @@ class wwdAccounts {
         $footpages = new wwd_page_foot($page, $pages, $prefix);
         $foot .= $footpages->render();
 
-//        for ( $i = 0; i< $pages; $i++ ) {
-//            $link = '/accounts/?page=' . $i ;
-//            $onclick = 'onclick="location.href=\'' . $link . '\'";';
-//
-//            $foot .= '<span ' . $onclick . '> ' . ($i+1) . ' </span>';
-//        }
-
         $result = $result . $foot;
 
         return $result;
     }
 
     public function render($pg) {
+        $output = '';
 
         if ( $pg == 0 ) {
             $pg = 1;
@@ -128,10 +129,15 @@ class wwdAccounts {
 
                 usort($rows, array('wwdAccounts','cmp'));
 
-                $message = $this->formatTable($rows, $pg);
+                $searchForm = $this->generateSearchForm($this->search);
+
+                if ( count($searchForm) > 0 ) {
+                    $output .= $searchForm;
+                }
+                $output .= $this->formatTable($rows, $pg);
             }
 
-            $Result = $message;
+            $Result = $output;
         } else {
             $Result =
                 '<hr>'
@@ -141,14 +147,14 @@ class wwdAccounts {
         }
         return $Result;
     }
+
+    private function generateSearchForm($term) {
+        $output = '';
+        $output .= '<form><span>';
+        $output .= '<input type="text" value="{$term}" name="searchterm">';
+        $output .= '</span></form>';
+        return $output;
+    }
 }
 
-function wwd_accounts()
-{
-    $page = get_query_var('page', '0');
-
-    $list = new wwdAccounts();
-    return $list->render($page);
-}
-
-add_shortcode('wwd-accounts', 'wwd_accounts');
+$wwd_accounts = new wwdAccounts();
