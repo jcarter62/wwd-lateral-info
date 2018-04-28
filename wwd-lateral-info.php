@@ -28,3 +28,4 @@ require WWD_LAT_INFO_DIR . '/includes/wwd-qvars.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-laterals.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-lateral.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-accounts.php';
+require WWD_LAT_INFO_DIR . '/includes/wwd-account.php';

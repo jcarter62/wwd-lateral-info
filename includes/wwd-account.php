@@ -3,99 +3,109 @@
 class wwdAccount {
     private $auth;
     private $isAuth = false;
-    private $pagesize;
-    private $page;
+    private $account = 0;
 
     public function __construct()
     {
+        add_shortcode('wwd-account', array( $this,'execute'));
+    }
+
+    public function execute()
+    {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
-        $this->pagesize = get_option('wwd-pagesize',5);
+        $this->account = get_query_var('id', '0');
+
+        return $this->render();
     }
 
-    /**
-     * @param Account Number
-     * @return String, with '000' prepended to allow for better sorting.
-     */
-    private function fmt($x) {
-        $str = '0000000000' . $x ;
-        $str = substr($str, count($str) - 10, 9);
-        return $str;
-    }
+    // Create address string, including 3 lines and comma where needed.
+    private function fmtAddress($rec) {
+        $a2 = trim($rec['Address2']);
+        $a3 = trim($rec['Address3']);
 
-    private function cmp($a,$b) {
-        $a0 = $this->fmt($a['id']);
-        $b0 = $this->fmt($b['id']);
-        return strcmp( $a0, $b0 );
-    }
-
-
-    //
-    // Format data in $rows to be displayed
-    // in table.
-    //
-    private function formatTable($rows, $pg) {
-        $rownum = 0;
-        $result = '<table class="zebra" border="0">'
-            . '<tr><th>Account</th><th>Account Name</th></tr>';
-
-        if ( $pg < 0 ) {
-            $page = 1;
-        } else {
-            $page = $pg - 1;
+        $result = $rec['Address1'];
+        if ( strlen($a2) > 0 ) {
+            $result .= ', ' . $a2;
         }
-
-        $pageStart = $page * $this->pagesize;
-        $pageEnd = ($page + 1) * $this->pagesize;
-
-        foreach( $rows as $row ) {
-            $rownum  += 1;
-
-            if ( ( $pageStart <= $rownum ) && ( $rownum < $pageEnd ) ) {
-                $link = '/account/?id=' . $row["id"];
-
-                $onclick = 'onclick="location.href=\'' . $link . '\'";';
-                $result .= '<tr ' . $onclick . '>'
-                    . '<td '. '>' . $row["id"] . '</td>'
-                    . '<td '. '>' . $row["FullName"] . '</td>'
-                    . '</tr>';
-            }
+        if ( strlen($a3) > 0 ) {
+            $result .= ', ' . $a3;
         }
-
-        $result .= '</table>';
-
-        // add footer for page links.
-        $prefix = '/accounts/?page=';
-        $pages = round( $rownum / $this->pagesize, 0 );
-        $foot = '<hr>';
-        $footpages = new wwd_page_foot($page, $pages, $prefix);
-        $foot .= $footpages->render();
-
-//        for ( $i = 0; i< $pages; $i++ ) {
-//            $link = '/accounts/?page=' . $i ;
-//            $onclick = 'onclick="location.href=\'' . $link . '\'";';
-//
-//            $foot .= '<span ' . $onclick . '> ' . ($i+1) . ' </span>';
-//        }
-
-        $result = $result . $foot;
-
         return $result;
     }
 
-    public function render($pg) {
+    private function getAccountAddress() {
+        $output = '';
+        $method = '/wmis-account(' . $this->account . ')';
+        $curl = $this->curlOpts($method, 'GET');
+        if ( $curl !== null ) {
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
 
-        if ( $pg == 0 ) {
-            $pg = 1;
+            if ($err) {
+                $output = $err;
+            }
+            else {
+                $data = json_decode($response, true);
+                $output = '<div class="container">';
+
+//                $output .= '<div class="row">' . 'Account:' . '</div>';
+                $output .= '<div class="row">'
+                    . '<div class="col">Account</div>'
+                    . '<div class="col"><strong>' . $data['NAME_ID'] . '</strong></div>'
+                    . '</div>';
+
+                $output .= '<div class="row">'
+                    . '<div class="col">Name</div>'
+                    . '<div class="col"><strong>' . $data['FullName'] . '</strong></div>'
+                    . '</div>';
+
+                $output .= '<div class="row">'
+                    . '<div class="col">Address</div>'
+                    . '<div class="col"><strong>'
+                    . $this->fmtAddress($data)
+                    . '</strong></div>'
+                    . '</div>';
+
+                $output .= '<div class="row">'
+                    . '<div class="col">City State Zip</div>'
+                    . '<div class="col"><strong>'
+                    . $data['City'] . ' '
+                    . $data['State'] . ' '
+                    . $data['Zip'] . ' '
+                    . '</strong></div>'
+                    . '</div>';
+
+                $output .= '<hr>';
+
+
+                $output .= '</div>'; // container
+/*
+ * array (size=9)
+  '@odata.context' => string 'https://cdata.api.wwddata.com/$metadata#wmis-account/$entity' (length=60)
+  'Zip' => string '93711-2451' (length=10)
+  'City' => string 'FRESNO' (length=6)
+  'FullName' => string 'AREMED FARMS' (length=12)
+  'Address2' => string ' ' (length=1)
+  'Address3' => string ' ' (length=1)
+  'Address1' => string '1338 W WRENWOOD' (length=15)
+  'State' => string 'CA' (length=2)
+  'NAME_ID' => int 1
+ */
+            }
         }
+        return $output;
+    }
+
+    private function curlOpts($method, $PostOrGet) {
+        $output = null;
 
         if ( $this->isAuth ) {
-
             // Load options, and present to users.
             $api = new wwd_api_info();
             $apikey = $api->getApikey();
             $apiurl = $api->getApiurl();
-            $method = '/wmis-accountlist/';
 
             $curl = curl_init();
 
@@ -106,32 +116,26 @@ class wwdAccount {
                 CURLOPT_MAXREDIRS => 10,
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_CUSTOMREQUEST => $PostOrGet,
                 CURLOPT_HTTPHEADER => array(
                     "Cache-Control: no-cache",
                     "x-cdata-authtoken: " . $apikey
                 ),
                 CURLOPT_SSL_VERIFYPEER => false,
             ));
+            $output = $curl;
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
+        }
+        return $output;
+    }
 
-            curl_close($curl);
+    public function render() {
+        $output = '';
 
-            if ($err) {
-                $message = $err;
-            }
-            else {
-                $data = json_decode($response, true);
-                $rows = $data["value"];
+        if ( $this->isAuth ) {
+            $output .= $this->getAccountAddress();
 
-                usort($rows, array('wwdAccounts','cmp'));
-
-                $message = $this->formatTable($rows, $pg);
-            }
-
-            $Result = $message;
+            $Result = $output;
         } else {
             $authMessage = new wwd_auth_msg();
 
@@ -141,12 +145,4 @@ class wwdAccount {
     }
 }
 
-function wwd_accounts()
-{
-    $page = get_query_var('page', '0');
-
-    $list = new wwdAccounts();
-    return $list->render($page);
-}
-
-add_shortcode('wwd-accounts', 'wwd_accounts');
+$wwd_account = new wwdAccount();
