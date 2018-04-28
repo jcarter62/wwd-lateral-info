@@ -6,13 +6,20 @@
  * Time: 10:55 AM
  */
 
+class wwd_qvars {
 
-//
-// Add Query Variables we need in our plugin.
-//
-function wwd_queryvars( $vars ) {
-    array_push($vars, "id","page");
-    return $vars;
+    public function __construct()
+    {
+        add_filter('query_vars', array($this, 'execute'));
+    }
+
+    //
+    // Add Query Variables we need in our plugin.
+    //
+    public function execute($vars) {
+        array_push($vars, "id","page");
+        return $vars;
+    }
 }
 
-add_filter( 'query_vars', 'wwd_queryvars' );
+$wwd_qvars = new wwd_qvars();

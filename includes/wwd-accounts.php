@@ -19,6 +19,10 @@ class wwdAccounts {
         $this->pagesize = get_option('wwd-pagesize',5);
         $this->page = get_query_var('page', '0');
 
+        if ( array_key_exists('accounts_search', $_POST ) ) {
+            $this ->search = $_POST['searchterm'];
+        }
+
         return $this->render($this->page);
     }
     /**
@@ -46,19 +50,19 @@ class wwdAccounts {
         $result = '<table class="zebra" border="0">'
             . '<tr><th>Account</th><th>Account Name</th></tr>';
 
-        if ( $pg < 0 ) {
-            $page = 1;
-        } else {
-            $page = $pg - 1;
-        }
-
-        $pageStart = $page * $this->pagesize;
-        $pageEnd = ($page + 1) * $this->pagesize;
-
+//        if ( $pg < 0 ) {
+//            $page = 1;
+//        } else {
+//            $page = $pg - 1;
+//        }
+//
+//        $pageStart = $page * $this->pagesize;
+//        $pageEnd = ($page + 1) * $this->pagesize;
+//
         foreach( $rows as $row ) {
             $rownum  += 1;
 
-            if ( ( $pageStart <= $rownum ) && ( $rownum < $pageEnd ) ) {
+//            if ( ( $pageStart <= $rownum ) && ( $rownum < $pageEnd ) ) {
                 $link = '/account/?id=' . $row["id"];
 
                 $onclick = 'onclick="location.href=\'' . $link . '\'";';
@@ -66,21 +70,34 @@ class wwdAccounts {
                     . '<td '. '>' . $row["id"] . '</td>'
                     . '<td '. '>' . $row["FullName"] . '</td>'
                     . '</tr>';
-            }
+//            }
         }
 
         $result .= '</table>';
 
-        // add footer for page links.
-        $prefix = '/accounts/?page=';
-        $pages = round( $rownum / $this->pagesize, 0 );
-        $foot = '<hr>';
-        $footpages = new wwd_page_foot($page, $pages, $prefix);
-        $foot .= $footpages->render();
-
-        $result = $result . $foot;
+//        // add footer for page links.
+//        $prefix = '/accounts/?page=';
+//        $pages = round( $rownum / $this->pagesize, 0 );
+//        $foot = '<hr>';
+//        $footpages = new wwd_page_foot($page, $pages, $prefix);
+//        $foot .= $footpages->render();
+//
+//        $result = $result . $foot;
 
         return $result;
+    }
+
+    private function myFilter($r, $term) {
+        $upterm = strtoupper($term);
+        $output = array();
+        foreach( $r as $row ) {
+            $x = strtoupper( $row['id'] . $row['FullName'] );
+            if ( strpos($x,$upterm) !== false ) {
+                // found it.
+                array_push($output, $row);
+            }
+        }
+        return $output;
     }
 
     public function render($pg) {
@@ -127,6 +144,10 @@ class wwdAccounts {
                 $data = json_decode($response, true);
                 $rows = $data["value"];
 
+                if ( $this->search > '' ) {
+                    $rows = $this->myFilter($rows, $this->search);
+                }
+
                 usort($rows, array('wwdAccounts','cmp'));
 
                 $searchForm = $this->generateSearchForm($this->search);
@@ -139,19 +160,20 @@ class wwdAccounts {
 
             $Result = $output;
         } else {
-            $Result =
-                '<hr>'
-                . 'You are not authorized to view this content. <br>'
-                . '<a href="/wp-login.php">Please Login.</a>'
-                . '<hr>';
+            $authMessage = new wwd_auth_msg();
+
+            $Result = '<hr>' . $authMessage->notAuthorized() . '<hr>';
         }
         return $Result;
     }
 
     private function generateSearchForm($term) {
         $output = '';
-        $output .= '<form><span>';
-        $output .= '<input type="text" value="{$term}" name="searchterm">';
+        $output .= '<form method="post" action=""><span>';
+        $output .= '<input type="text" value="' . $term . '" name="searchterm">';
+
+        $output .= '<input type="submit" name="accounts_search" class="button button-primary" value="Search">';
+
         $output .= '</span></form>';
         return $output;
     }

@@ -119,11 +119,9 @@ class wwdLateralInfo {
             $info = $message;
 
         } else {
-            $info =
-                '<hr>'
-                . 'You are not authorized to view this content. <br>'
-                . '<a href="/wp-login.php">Please Login.</a>'
-                . '<hr>';
+            $authMessage = new wwd_auth_msg();
+
+            $info = '<hr>' . $authMessage->notAuthorized() . '<hr>';
         }
 
         return $info;

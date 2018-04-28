@@ -117,11 +117,8 @@ class wwdLateralList {
 
             $Result = $message;
         } else {
-            $Result =
-                '<hr>'
-                . 'You are not authorized to view this content. <br>'
-                . '<a href="/wp-login.php">Please Login.</a>'
-                . '<hr>';
+            $authMessage = new wwd_auth_msg();
+            $Result = '<hr>' . $authMessage->notAuthorized() . '<hr>';
         }
         return $Result;
     }
