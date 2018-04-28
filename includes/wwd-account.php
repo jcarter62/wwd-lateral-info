@@ -50,7 +50,6 @@ class wwdAccount {
                 $data = json_decode($response, true);
                 $output = '<div class="container">';
 
-//                $output .= '<div class="row">' . 'Account:' . '</div>';
                 $output .= '<div class="row">'
                     . '<div class="col">Account</div>'
                     . '<div class="col"><strong>' . $data['NAME_ID'] . '</strong></div>'
@@ -79,20 +78,7 @@ class wwdAccount {
 
                 $output .= '<hr>';
 
-
                 $output .= '</div>'; // container
-/*
- * array (size=9)
-  '@odata.context' => string 'https://cdata.api.wwddata.com/$metadata#wmis-account/$entity' (length=60)
-  'Zip' => string '93711-2451' (length=10)
-  'City' => string 'FRESNO' (length=6)
-  'FullName' => string 'AREMED FARMS' (length=12)
-  'Address2' => string ' ' (length=1)
-  'Address3' => string ' ' (length=1)
-  'Address1' => string '1338 W WRENWOOD' (length=15)
-  'State' => string 'CA' (length=2)
-  'NAME_ID' => int 1
- */
             }
         }
         return $output;
