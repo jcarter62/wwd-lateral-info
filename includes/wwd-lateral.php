@@ -7,6 +7,8 @@ class wwdLateralInfo {
     private $auth;
     private $isAuth = false;
     private $id = '';
+    private $accountSlug = '';
+    private $meterSlug = '';
 
     /**
      * wwdLateralInfo constructor.
@@ -26,6 +28,9 @@ class wwdLateralInfo {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
 
+        $this->accountSlug = get_option('wwd-page-account');
+        $this->meterSlug = get_option('wwd-page-meter');
+
         $this->id = get_query_var('id', '');
         $info = $this->render();
 
@@ -41,8 +46,17 @@ class wwdLateralInfo {
             .'<th>Account Name</th></tr>';
     }
 
-    private function wwd_cell($s) {
-        return '<td>' . $s . '</td>';
+    private function wwd_cell($data, $slug) {
+        $output = '<td>';
+        if ( $slug > '' ) {
+            $output .= '<a href="/' . $slug . '/?id=' . $data . '">';
+        }
+        $output .= $data;
+        if ( $slug > '' ) {
+            $output .= '</a>';
+        }
+        $output .= '</td>';
+        return $output;
     }
 
     //
@@ -56,11 +70,11 @@ class wwdLateralInfo {
         foreach( $rows as $row ) {
 
             $result .= '<tr>'
-                . $this->wwd_cell($row['lateral'])
-                . $this->wwd_cell($row['meter'])
-                . $this->wwd_cell($row['geo'])
-                . $this->wwd_cell($row['account'])
-                . $this->wwd_cell($row['fullname'])
+                . $this->wwd_cell($row['lateral'], '')
+                . $this->wwd_cell($row['meter'], $this->meterSlug)
+                . $this->wwd_cell($row['geo'], '')
+                . $this->wwd_cell($row['account'], $this->accountSlug)
+                . $this->wwd_cell($row['fullname'], '')
                 . '</tr>';
         }
 
@@ -79,6 +93,7 @@ class wwdLateralInfo {
             $apikey = $api->getApikey();
             $apiurl = $api->getApiurl();
             $method = '/wp-meterbylat/';
+
 
             $curl = curl_init();
 

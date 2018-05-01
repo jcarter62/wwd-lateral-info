@@ -6,6 +6,7 @@ class wwdAccounts {
     private $pagesize;
     private $page;
     private $search = '';
+    private $accountSlug = '';
 
     public function __construct()
     {
@@ -18,6 +19,7 @@ class wwdAccounts {
         $this->isAuth = $this->auth->isIsAuthenticated();
         $this->pagesize = get_option('wwd-pagesize',5);
         $this->page = get_query_var('page', '0');
+        $this->accountSlug = get_option('wwd-page-account');
 
         if ( array_key_exists('accounts_search', $_POST ) ) {
             $this ->search = $_POST['searchterm'];
@@ -50,39 +52,17 @@ class wwdAccounts {
         $result = '<table class="zebra" border="0">'
             . '<tr><th>Account</th><th>Account Name</th></tr>';
 
-//        if ( $pg < 0 ) {
-//            $page = 1;
-//        } else {
-//            $page = $pg - 1;
-//        }
-//
-//        $pageStart = $page * $this->pagesize;
-//        $pageEnd = ($page + 1) * $this->pagesize;
-//
-        foreach( $rows as $row ) {
-            $rownum  += 1;
-
-//            if ( ( $pageStart <= $rownum ) && ( $rownum < $pageEnd ) ) {
-                $link = '/account/?id=' . $row["id"];
-
-                $onclick = 'onclick="location.href=\'' . $link . '\'";';
-                $result .= '<tr ' . $onclick . '>'
-                    . '<td '. '>' . $row["id"] . '</td>'
-                    . '<td '. '>' . $row["FullName"] . '</td>'
-                    . '</tr>';
-//            }
+        foreach ($rows as $row) {
+            $rownum += 1;
+            $link = '/' . $this->accountSlug . '/?id=' . $row["id"];
+            $onclick = 'onclick="location.href=\'' . $link . '\'";';
+            $result .= '<tr ' . $onclick . '>'
+                . '<td ' . '>' . $row["id"] . '</td>'
+                . '<td ' . '>' . $row["FullName"] . '</td>'
+                . '</tr>';
         }
 
         $result .= '</table>';
-
-//        // add footer for page links.
-//        $prefix = '/accounts/?page=';
-//        $pages = round( $rownum / $this->pagesize, 0 );
-//        $foot = '<hr>';
-//        $footpages = new wwd_page_foot($page, $pages, $prefix);
-//        $foot .= $footpages->render();
-//
-//        $result = $result . $foot;
 
         return $result;
     }

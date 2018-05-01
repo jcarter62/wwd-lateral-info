@@ -11,6 +11,11 @@ function wwdLatInfoAdminPage()
         update_option('wwd-apiurl', $_POST['inp-apiurl']);
         update_option('wwd-pagesize', $_POST['inp-pagesize']);
         update_option('wwd-role', $_POST['inp-role']);
+
+        update_option('wwd-page-lateral', $_POST['inp-page-lateral']);
+        update_option('wwd-page-meter', $_POST['inp-page-meter']);
+        update_option('wwd-page-account', $_POST['inp-page-account']);
+
         ?>
         <div>Updated!!</div>
         <?php
@@ -20,6 +25,10 @@ function wwdLatInfoAdminPage()
     $apiurl = get_option('wwd-apiurl', '');
     $pagesize = get_option('wwd-pagesize', '');
     $role = get_option('wwd-role');
+
+    $pageLateral = get_option('wwd-page-lateral');
+    $pageMeter = get_option('wwd-page-meter');
+    $pageAccount = get_option('wwd-page-account');
 
     ?>
     <div class="wrap">
@@ -37,6 +46,15 @@ function wwdLatInfoAdminPage()
                 <?php wp_dropdown_roles($role); ?>
             </select>
             <hr>
+
+            <label for="inp-page-account">Page Slug for Account:</label>
+            <input type="text" name="inp-page-account" class="large-text" placeholder="<?php print $pageAccount; ?>">
+
+            <label for="inp-page-lateral">Page Slug for Lateral:</label>
+            <input type="text" name="inp-page-lateral" class="large-text" placeholder="<?php print $pageLateral; ?>">
+
+            <label for="inp-page-meter">Page Slug for Meter:</label>
+            <input type="text" name="inp-page-meter" class="large-text" placeholder="<?php print $pageMeter; ?>">
 
             <input type="submit" name="submit_admin_update" class="button button-primary" value="UPDATE SCRIPTS">
         </form>
