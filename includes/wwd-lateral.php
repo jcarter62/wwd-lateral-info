@@ -38,16 +38,18 @@ class wwdLateralInfo {
     }
 
     private function wwd_header() {
-        return
-            '<tr><th>Lateral</th>'
-            .'<th>Meter</th>'
-            .'<th>Geo</th>'
-            .'<th>Account</th>'
-            .'<th>Account Name</th></tr>';
+        $result = '<div class="row medium">'
+            .'<div class="col">Lateral</div>'
+            .'<div class="col">Meter</div>'
+            .'<div class="col">Geo</div>'
+            .'<div class="col">Account</div>'
+            .'<div class="col">Name</div>'
+            .'</div>';
+        return $result;
     }
 
     private function wwd_cell($data, $slug) {
-        $output = '<td>';
+        $output = '<div class="col">';
         if ( $slug > '' ) {
             $output .= '<a href="/' . $slug . '/?id=' . $data . '">';
         }
@@ -55,7 +57,7 @@ class wwdLateralInfo {
         if ( $slug > '' ) {
             $output .= '</a>';
         }
-        $output .= '</td>';
+        $output .= '</div>';
         return $output;
     }
 
@@ -64,21 +66,21 @@ class wwdLateralInfo {
     // in table.
     //
     private function formatTable($rows) {
-        $result = '<table class="zebra" border="0">'
-            . $this->wwd_header();
+        $result = '<div class="container">';
 
+        $result .= $this->wwd_header();
+        $oddrow = new wwd_oddrow('oddrow');
         foreach( $rows as $row ) {
-
-            $result .= '<tr>'
+            $result .= '<div class="row medium '. $oddrow->getClass() .'">'
                 . $this->wwd_cell($row['lateral'], '')
                 . $this->wwd_cell($row['meter'], $this->meterSlug)
                 . $this->wwd_cell($row['geo'], '')
                 . $this->wwd_cell($row['account'], $this->accountSlug)
                 . $this->wwd_cell($row['fullname'], '')
-                . '</tr>';
+                . '</div>';
         }
 
-        $result .= '</table>';
+        $result .= '</div>';
         return $result;
     }
 

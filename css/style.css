@@ -29,8 +29,18 @@
     cursor: pointer;
 }
 
+.oddrow {
+    background-color: lightgray;
+}
+
 .large {
-    font-size: 3.0vmin;
+    font-size: 2.5vmin;
+    cursor: pointer;
+}
+
+.medium {
+    font-size: 1.5vmin;
+    cursor: pointer;
 }
 
 /*https://css-tricks.com/viewport-sized-typography/ */

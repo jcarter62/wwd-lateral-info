@@ -49,20 +49,23 @@ class wwdAccounts {
     //
     private function formatTable($rows, $pg) {
         $rownum = 0;
-        $result = '<table class="zebra" border="0">'
-            . '<tr><th>Account</th><th>Account Name</th></tr>';
+        $result = '<div class="container">'
+            . '<div class="row large">'
+            . '<div class="col">Account</div>'
+            . '<div class="col">Account Name</div>'
+            . '</div>';
 
+        $oddrow = new wwd_oddrow('oddrow');
         foreach ($rows as $row) {
-            $rownum += 1;
             $link = '/' . $this->accountSlug . '/?id=' . $row["id"];
             $onclick = 'onclick="location.href=\'' . $link . '\'";';
-            $result .= '<tr ' . $onclick . '>'
-                . '<td ' . '>' . $row["id"] . '</td>'
-                . '<td ' . '>' . $row["FullName"] . '</td>'
-                . '</tr>';
+            $result .= '<div class="row large '.$oddrow->getClass().'" ' . $onclick . '>'
+                . '<div class="col-3">' . $row["id"] . '</div>'
+                . '<div class="col-8">' . $row["FullName"] . '</div>'
+                . '</div>';
         }
 
-        $result .= '</table>';
+        $result .= '</div>';
 
         return $result;
     }
