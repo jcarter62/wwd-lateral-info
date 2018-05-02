@@ -32,3 +32,4 @@ require WWD_LAT_INFO_DIR . '/includes/wwd-lateral.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-accounts.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-account.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-meter.php';
+require WWD_LAT_INFO_DIR . '/includes/wwd-meters.php';

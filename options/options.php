@@ -56,19 +56,10 @@ function wwdLatInfoAdminPage()
             <label for="inp-page-meter">Page Slug for Meter:</label>
             <input type="text" name="inp-page-meter" class="large-text" placeholder="<?php print $pageMeter; ?>">
 
-            <input type="submit" name="submit_admin_update" class="button button-primary" value="UPDATE SCRIPTS">
+            <input type="submit" name="submit_admin_update" class="button button-primary" value="UPDATE SETTINGS">
         </form>
     </div>
     <hr>
-    <div>
-        <h3>
-            &ast;
-            This plugin requires users
-            to be a member of the
-            role &quot;<bold>wwdlist</bold>&quot;.
-        </h3>
-
-    </div>
 
     <?php
 }

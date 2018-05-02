@@ -11,6 +11,6 @@ class wwd_auth_msg
     public function notAuthorized() {
         $Result = 'You are not authorized to view this content. '
             . '<a href="/wp-login.php">Please Login.</a>';
-        return Result;
+        return $Result;
     }
 }
