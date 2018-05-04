@@ -24,44 +24,6 @@ class wwdMeters {
         return $this->render();
     }
 
-    private function curlOpts($method, $PostOrGet, $FormData ) {
-        $output = null;
-
-        if ( $this->isAuth ) {
-            // Load options, and present to users.
-            $api = new wwd_api_info();
-            $apikey = $api->getApikey();
-            $apiurl = $api->getApiurl();
-
-            $curl = curl_init();
-
-            if ( $FormData == null ) {
-                $data = [];
-            } else {
-                $data = $FormData;
-            }
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $apiurl . $method,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_POSTFIELDS => $data,
-                CURLOPT_CUSTOMREQUEST => $PostOrGet,
-                CURLOPT_HTTPHEADER => array(
-                    "Cache-Control: no-cache",
-                    "x-cdata-authtoken: " . $apikey
-                ),
-                CURLOPT_SSL_VERIFYPEER => false,
-            ));
-            $output = $curl;
-
-        }
-        return $output;
-    }
-
     private function myFilter($r, $term) {
         $upTerm = strtoupper($term);
         $sep = '/';
@@ -81,18 +43,10 @@ class wwdMeters {
         $method = '/wp-sp-meters/';
         $formData = [];
 
-//        $curl = $this->curlOpts($method, 'POST', $formData);
-
         $curl = new wwd_db($method, 'POST', $formData);
         $response = $curl->exec();
         $err = $curl->error();
         $curl->close();
-
-//
-//        if ( $curl !== null ) {
-//            $response = curl_exec($curl);
-//            $err = curl_error($curl);
-//            curl_close($curl);
 
             if ($err) {
                 $output = $err;

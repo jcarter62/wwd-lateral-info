@@ -23,7 +23,6 @@ class wwdLateralInfo
      * Execute shortcode method, and return results.
      * This shortcode generates a list of meters associated
      * with the lateral id.
-     * @return List of meters
      */
     public function execute()
     {
@@ -89,9 +88,6 @@ class wwdLateralInfo
         return $result;
     }
 
-    /**
-     * @return Table of meters for lateral id.
-     */
     private function render()
     {
         if ($this->isAuth) {
