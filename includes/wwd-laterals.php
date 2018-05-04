@@ -77,34 +77,12 @@ class wwdLateralList {
     private function render() {
 
         if ( $this->isAuth ) {
-
-            // Load options, and present to users.
-            $api = new wwd_api_info();
-            $apikey = $api->getApikey();
-            $apiurl = $api->getApiurl();
             $method = '/wp-lat/';
 
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $apiurl . $method,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => array(
-                    "Cache-Control: no-cache",
-                    "x-cdata-authtoken: " . $apikey
-                ),
-                CURLOPT_SSL_VERIFYPEER => false,
-            ));
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-
-            curl_close($curl);
+            $curl = new wwd_db($method, 'GET', []);
+            $response = $curl->exec();
+            $err = $curl->error();
+            $curl->close();
 
             if ($err) {
                 $message = $err;

@@ -81,12 +81,18 @@ class wwdMeters {
         $method = '/wp-sp-meters/';
         $formData = [];
 
-        $curl = $this->curlOpts($method, 'POST', $formData);
+//        $curl = $this->curlOpts($method, 'POST', $formData);
 
-        if ( $curl !== null ) {
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
+        $curl = new wwd_db($method, 'POST', $formData);
+        $response = $curl->exec();
+        $err = $curl->error();
+        $curl->close();
+
+//
+//        if ( $curl !== null ) {
+//            $response = curl_exec($curl);
+//            $err = curl_error($curl);
+//            curl_close($curl);
 
             if ($err) {
                 $output = $err;
@@ -122,7 +128,7 @@ class wwdMeters {
                 }
                 $output .= '</div>'; // container
             }
-        }
+//        }
         return $output;
     }
 

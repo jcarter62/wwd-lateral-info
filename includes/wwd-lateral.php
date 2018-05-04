@@ -3,7 +3,8 @@
 /**
  * Class wwdLateralInfo
  */
-class wwdLateralInfo {
+class wwdLateralInfo
+{
     private $auth;
     private $isAuth = false;
     private $id = '';
@@ -15,7 +16,7 @@ class wwdLateralInfo {
      */
     public function __construct()
     {
-        add_shortcode('wwd-lateral', array( $this, 'execute')) ;
+        add_shortcode('wwd-lateral', array($this, 'execute'));
     }
 
     /**
@@ -24,7 +25,8 @@ class wwdLateralInfo {
      * with the lateral id.
      * @return List of meters
      */
-    public function execute() {
+    public function execute()
+    {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
 
@@ -37,24 +39,26 @@ class wwdLateralInfo {
         return $info;
     }
 
-    private function wwd_header() {
+    private function wwd_header()
+    {
         $result = '<div class="row medium">'
-            .'<div class="col">Lateral</div>'
-            .'<div class="col">Meter</div>'
-            .'<div class="col">Geo</div>'
-            .'<div class="col">Account</div>'
-            .'<div class="col">Name</div>'
-            .'</div>';
+            . '<div class="col">Lateral</div>'
+            . '<div class="col">Meter</div>'
+            . '<div class="col">Geo</div>'
+            . '<div class="col">Account</div>'
+            . '<div class="col">Name</div>'
+            . '</div>';
         return $result;
     }
 
-    private function wwd_cell($data, $slug) {
+    private function wwd_cell($data, $slug)
+    {
         $output = '<div class="col">';
-        if ( $slug > '' ) {
+        if ($slug > '') {
             $output .= '<a href="/' . $slug . '/?id=' . $data . '">';
         }
         $output .= $data;
-        if ( $slug > '' ) {
+        if ($slug > '') {
             $output .= '</a>';
         }
         $output .= '</div>';
@@ -65,13 +69,14 @@ class wwdLateralInfo {
     // Format data in $rows to be displayed
     // in table.
     //
-    private function formatTable($rows) {
+    private function formatTable($rows)
+    {
         $result = '<div class="container">';
 
         $result .= $this->wwd_header();
         $oddrow = new wwd_oddrow('oddrow');
-        foreach( $rows as $row ) {
-            $result .= '<div class="row medium '. $oddrow->getClass() .'">'
+        foreach ($rows as $row) {
+            $result .= '<div class="row medium ' . $oddrow->getClass() . '">'
                 . $this->wwd_cell($row['lateral'], '')
                 . $this->wwd_cell($row['meter'], $this->meterSlug)
                 . $this->wwd_cell($row['geo'], '')
@@ -87,45 +92,20 @@ class wwdLateralInfo {
     /**
      * @return Table of meters for lateral id.
      */
-    private function render() {
-        if ( $this->isAuth ) {
-
-            // Load options, and present to users.
-            $api = new wwd_api_info();
-            $apikey = $api->getApikey();
-            $apiurl = $api->getApiurl();
+    private function render()
+    {
+        if ($this->isAuth) {
             $method = '/wp-meterbylat/';
+            $data = ['lateral' => $this->id];
 
-
-            $curl = curl_init();
-
-            $data = ['lateral'=> $this->id];
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $apiurl . $method,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_POSTFIELDS => $data,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_HTTPHEADER => array(
-                    "Cache-Control: no-cache",
-                    "x-cdata-authtoken:" . $apikey
-                ),
-                CURLOPT_SSL_VERIFYPEER => false,
-            ));
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-
-            curl_close($curl);
+            $curl = new wwd_db($method, 'POST', $data);
+            $response = $curl->exec();
+            $err = $curl->error();
+            $curl->close();
 
             if ($err) {
                 $message = $err;
-            }
-            else {
+            } else {
                 $data = json_decode($response, true);
                 $rows = $data["value"];
                 $results = $this->formatTable($rows);

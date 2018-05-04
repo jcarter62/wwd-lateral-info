@@ -1,6 +1,7 @@
 <?php
 
-class wwdAccounts {
+class wwdAccounts
+{
     private $auth;
     private $isAuth = false;
     private $pagesize;
@@ -10,44 +11,48 @@ class wwdAccounts {
 
     public function __construct()
     {
-        add_shortcode('wwd-accounts', array( $this,'execute'));
+        add_shortcode('wwd-accounts', array($this, 'execute'));
     }
 
     public function execute()
     {
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
-        $this->pagesize = get_option('wwd-pagesize',5);
+        $this->pagesize = get_option('wwd-pagesize', 5);
         $this->page = get_query_var('page', '0');
         $this->accountSlug = get_option('wwd-page-account');
 
-        if ( array_key_exists('accounts_search', $_POST ) ) {
-            $this ->search = $_POST['searchterm'];
+        if (array_key_exists('accounts_search', $_POST)) {
+            $this->search = $_POST['searchterm'];
         }
 
         return $this->render($this->page);
     }
+
     /**
      * @param Account Number
      * @return String, with '000' prepended to allow for better sorting.
      */
-    private function fmt($x) {
-        $str = '0000000000' . $x ;
+    private function fmt($x)
+    {
+        $str = '0000000000' . $x;
         $str = substr($str, count($str) - 10, 9);
         return $str;
     }
 
-    private function cmp($a,$b) {
+    private function cmp($a, $b)
+    {
         $a0 = $this->fmt($a['id']);
         $b0 = $this->fmt($b['id']);
-        return strcmp( $a0, $b0 );
+        return strcmp($a0, $b0);
     }
 
     //
     // Format data in $rows to be displayed
     // in table.
     //
-    private function formatTable($rows, $pg) {
+    private function formatTable($rows, $pg)
+    {
         $rownum = 0;
         $result = '<div class="container">'
             . '<div class="row large">'
@@ -59,7 +64,7 @@ class wwdAccounts {
         foreach ($rows as $row) {
             $link = '/' . $this->accountSlug . '/?id=' . $row["id"];
             $onclick = 'onclick="location.href=\'' . $link . '\'";';
-            $result .= '<div class="row large '.$oddrow->getClass().'" ' . $onclick . '>'
+            $result .= '<div class="row large ' . $oddrow->getClass() . '" ' . $onclick . '>'
                 . '<div class="col-3">' . $row["id"] . '</div>'
                 . '<div class="col-8">' . $row["FullName"] . '</div>'
                 . '</div>';
@@ -70,12 +75,13 @@ class wwdAccounts {
         return $result;
     }
 
-    private function myFilter($r, $term) {
+    private function myFilter($r, $term)
+    {
         $upterm = strtoupper($term);
         $output = array();
-        foreach( $r as $row ) {
-            $x = strtoupper( $row['id'] . $row['FullName'] );
-            if ( strpos($x,$upterm) !== false ) {
+        foreach ($r as $row) {
+            $x = strtoupper($row['id'] . $row['FullName']);
+            if (strpos($x, $upterm) !== false) {
                 // found it.
                 array_push($output, $row);
             }
@@ -83,59 +89,36 @@ class wwdAccounts {
         return $output;
     }
 
-    public function render($pg) {
+    public function render($pg)
+    {
         $output = '';
 
-        if ( $pg == 0 ) {
+        if ($pg == 0) {
             $pg = 1;
         }
 
-        if ( $this->isAuth ) {
-
-            // Load options, and present to users.
-            $api = new wwd_api_info();
-            $apikey = $api->getApikey();
-            $apiurl = $api->getApiurl();
+        if ($this->isAuth) {
             $method = '/wmis-accountlist/';
-
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $apiurl . $method,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => array(
-                    "Cache-Control: no-cache",
-                    "x-cdata-authtoken: " . $apikey
-                ),
-                CURLOPT_SSL_VERIFYPEER => false,
-            ));
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-
-            curl_close($curl);
+            $curl = new wwd_db($method, 'GET', []);
+            $response = $curl->exec();
+            $err = $curl->error();
+            $curl->close();
 
             if ($err) {
-                $message = $err;
-            }
-            else {
+                $output = $err;
+            } else {
                 $data = json_decode($response, true);
                 $rows = $data["value"];
 
-                if ( $this->search > '' ) {
+                if ($this->search > '') {
                     $rows = $this->myFilter($rows, $this->search);
                 }
 
-                usort($rows, array('wwdAccounts','cmp'));
+                usort($rows, array('wwdAccounts', 'cmp'));
 
                 $searchForm = $this->generateSearchForm($this->search);
 
-                if ( count($searchForm) > 0 ) {
+                if (count($searchForm) > 0) {
                     $output .= $searchForm;
                 }
                 $output .= $this->formatTable($rows, $pg);
@@ -150,7 +133,8 @@ class wwdAccounts {
         return $Result;
     }
 
-    private function generateSearchForm($term) {
+    private function generateSearchForm($term)
+    {
         $output = '';
         $output .= '<form method="post" action=""><span>';
         $output .= '<input type="text" value="' . $term . '" name="searchterm">';
