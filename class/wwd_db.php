@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jcarter
- * Date: 5/3/18
- * Time: 1:11 PM
- */
 
 class wwd_db
 {
@@ -29,10 +23,11 @@ class wwd_db
         return $this->curl;
     }
 
-    private function curlOpts() {
+    private function curlOpts()
+    {
         $this->curl = null;
 
-        if ( $this->auth->isIsAuthenticated() ) {
+        if ($this->auth->isIsAuthenticated()) {
             // Load options, and present to users.
             $api = new wwd_api_info();
             $apikey = $api->getApikey();
@@ -40,7 +35,7 @@ class wwd_db
 
             $this->curl = curl_init();
 
-            if ( $this->FormData == null ) {
+            if ($this->FormData == null) {
                 $data = [];
             } else {
                 $data = $this->FormData;
@@ -64,16 +59,18 @@ class wwd_db
         }
     }
 
-    public function exec() {
+    public function exec()
+    {
         return curl_exec($this->curl);
     }
 
-    public function error() {
+    public function error()
+    {
         return curl_error($this->curl);
     }
 
-    public function close() {
+    public function close()
+    {
         curl_close($this->curl);
     }
-
 }

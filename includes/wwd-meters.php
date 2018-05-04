@@ -1,6 +1,7 @@
 <?php
 
-class wwdMeters {
+class wwdMeters
+{
     private $auth;
     private $isAuth = false;
     private $meterSlug = '';
@@ -8,7 +9,7 @@ class wwdMeters {
 
     public function __construct()
     {
-        add_shortcode('wwd-meters', array( $this,'execute'));
+        add_shortcode('wwd-meters', array($this, 'execute'));
     }
 
     public function execute()
@@ -17,20 +18,21 @@ class wwdMeters {
         $this->isAuth = $this->auth->isIsAuthenticated();
         $this->meterSlug = get_option('wwd-page-meter');
 
-        if ( array_key_exists('meter_search', $_POST)) {
+        if (array_key_exists('meter_search', $_POST)) {
             $this->search = $_POST['searchterm'];
         }
 
         return $this->render();
     }
 
-    private function myFilter($r, $term) {
+    private function myFilter($r, $term)
+    {
         $upTerm = strtoupper($term);
         $sep = '/';
         $output = array();
-        foreach( $r as $row ) {
-            $x = strtoupper($row['meter'].$sep.$row['geo'].$sep.$row['latname'] );
-            if ( strpos($x,$upTerm) !== false ) {
+        foreach ($r as $row) {
+            $x = strtoupper($row['meter'] . $sep . $row['geo'] . $sep . $row['latname']);
+            if (strpos($x, $upTerm) !== false) {
                 // found it.
                 array_push($output, $row);
             }
@@ -38,7 +40,8 @@ class wwdMeters {
         return $output;
     }
 
-    private function getMeterList() {
+    private function getMeterList()
+    {
         $output = '';
         $method = '/wp-sp-meters/';
         $formData = [];
@@ -48,48 +51,48 @@ class wwdMeters {
         $err = $curl->error();
         $curl->close();
 
-            if ($err) {
-                $output = $err;
+        if ($err) {
+            $output = $err;
+        } else {
+            $json = json_decode($response, true);
+
+            $data = $json['value'];
+
+            $output = '<div class="container">';
+            $output .= '<div class="row large">'
+                . '<div class="col-3">Meter ID</div>'
+                . '<div class="col-6">Geo</div>'
+                . '<div class="col-3">Lateral</div>'
+                . '</div>';
+
+
+            if ($this->search > '') {
+                $data = $this->myFilter($data, $this->search);
             }
-            else {
-                $json = json_decode($response, true);
 
-                $data = $json['value'];
+            $oddrow = new wwd_oddrow('oddrow');
+            foreach ($data as $row) {
+                $class = $oddrow->getClass();
+                $link = '<a href="/' . $this->meterSlug . '/?id=' . $row['meter'] . '">';
+                $output .= $link
+                    . '<div class="row ' . $class . ' large">'
+                    . '<div class="col-3">' . $row['meter'] . '</div>'
+                    . '<div class="col-6">' . $row['geo'] . '</div>'
+                    . '<div class="col-3">' . $row['latname'] . '</div>'
+                    . '</div></a>';
 
-                $output = '<div class="container">';
-                $output .= '<div class="row large">'
-                    . '<div class="col-3">Meter ID</div>'
-                    . '<div class="col-6">Geo</div>'
-                    . '<div class="col-3">Lateral</div>'
-                    . '</div>';
-
-
-                if ( $this->search > '' ) {
-                    $data = $this->myFilter($data, $this->search);
-                }
-
-                $oddrow = new wwd_oddrow('oddrow');
-                foreach ($data as $row) {
-                    $class = $oddrow->getClass();
-                    $link = '<a href="/' . $this->meterSlug . '/?id=' . $row['meter'] . '">';
-                    $output .= $link
-                        . '<div class="row '. $class . ' large">'
-                        .'<div class="col-3">'. $row['meter'] .'</div>'
-                        .'<div class="col-6">'. $row['geo'] .'</div>'
-                        .'<div class="col-3">'. $row['latname'] .'</div>'
-                        .'</div></a>';
-
-                }
-                $output .= '</div>'; // container
             }
+            $output .= '</div>'; // container
+        }
 //        }
         return $output;
     }
 
-    public function render() {
+    public function render()
+    {
         $output = '';
 
-        if ( $this->isAuth ) {
+        if ($this->isAuth) {
             $output .= $this->generateSpinner();
             $output .= $this->generateSearchForm($this->search);
             $output .= $this->getMeterList();
@@ -102,7 +105,8 @@ class wwdMeters {
         return $Result;
     }
 
-    private function generateSearchForm($term) {
+    private function generateSearchForm($term)
+    {
         $output = '';
         $output .= '<form method="post" action=""><span>';
         $output .= '<input type="text" value="' . $term . '" name="searchterm">';
@@ -113,7 +117,8 @@ class wwdMeters {
         return $output;
     }
 
-    private function generateSpinner() {
+    private function generateSpinner()
+    {
         $output = '<div class="spinner"></div>';
         return $output;
     }

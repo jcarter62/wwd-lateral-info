@@ -7,12 +7,12 @@ Author: WWD
 Author URI: https://wwd.ca.gov/
 */
 
-if ( !defined('WWD_LAT_INFO_DIR') ) {
-    define('WWD_LAT_INFO_DIR', dirname( __FILE__) );
+if (!defined('WWD_LAT_INFO_DIR')) {
+    define('WWD_LAT_INFO_DIR', dirname(__FILE__));
 }
 
-if ( !defined('WWD_LAT_INFO_BASE') ) {
-    define('WWD_LAT_INFO_BASE', __FILE__ );
+if (!defined('WWD_LAT_INFO_BASE')) {
+    define('WWD_LAT_INFO_BASE', __FILE__);
 }
 
 

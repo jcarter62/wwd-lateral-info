@@ -6,28 +6,32 @@
  * Time: 9:28 PM
  */
 
-class wwd_api_info {
+class wwd_api_info
+{
     private $apikey = '';
     private $apiurl = '';
 
     /**
      * @return mixed|string|void
      */
-    public function getApikey() {
+    public function getApikey()
+    {
         return $this->apikey;
     }
 
     /**
      * @return mixed|string|void
      */
-    public function getApiurl() {
+    public function getApiurl()
+    {
         return $this->apiurl;
     }
 
     /**
      * wwd_api_info constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->apikey = get_option('wwd-apikey', '');
         $this->apiurl = get_option('wwd-apiurl', '');
     }

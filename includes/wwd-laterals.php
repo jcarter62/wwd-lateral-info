@@ -1,6 +1,7 @@
 <?php
 
-class wwdLateralList {
+class wwdLateralList
+{
     private $auth;
     private $isAuth = false;
 
@@ -9,7 +10,7 @@ class wwdLateralList {
      */
     public function __construct()
     {
-        add_shortcode('wwd-lat-list', array( $this,'execute') );
+        add_shortcode('wwd-lat-list', array($this, 'execute'));
     }
 
 
@@ -23,49 +24,52 @@ class wwdLateralList {
         return $this->render();
     }
 
-    private function fmt($x) {
+    private function fmt($x)
+    {
         //
         // Add P to end of $x if appropriate, and prepend 000's
         //
-        $firstChar = substr($x,0,1);
+        $firstChar = substr($x, 0, 1);
         $str = $x;
 
-        if ( $firstChar == 'P' ) {
-            $lastChar = substr($x, count($x) - 1, 1 );
-            if ( $lastChar <> 'P' ) {
+        if ($firstChar == 'P') {
+            $lastChar = substr($x, count($x) - 1, 1);
+            if ($lastChar <> 'P') {
                 $str = $str . 'P';
             }
         }
 
-        $str = '000000' . $str ;
+        $str = '000000' . $str;
         $str = substr($str, count($str) - 6, 5);
         return $str;
     }
 
-    private function cmp($a,$b) {
+    private function cmp($a, $b)
+    {
         $a0 = $this->fmt($a['LatName']);
         $b0 = $this->fmt($b['LatName']);
 
-        return strcmp( $a0, $b0 );
+        return strcmp($a0, $b0);
     }
 
     //
     // Format data in $rows to be displayed
     // in table.
     //
-    private function formatTable($rows) {
+    private function formatTable($rows)
+    {
         $rownum = 0;
         $result = '<div class="container">';
         $result .= '<div class="row large"><div class="col">Lateral</div></div>';
 
         $oddrow = new wwd_oddrow('oddrow');
-        foreach( $rows as $row ) {
-            $rownum  += 1;
+        foreach ($rows as $row) {
+            $rownum += 1;
             $link = '/lateral?id=' . $row["id"];
 
             $onclick = 'onclick="location.href=\'' . $link . '\'";';
             $class = 'class="row large ' . $oddrow->getClass() . '"';
-            $result .= '<div '. $class .'><div class="col" '. $onclick . '>'
+            $result .= '<div ' . $class . '><div class="col" ' . $onclick . '>'
                 . $row["LatName"]
                 . '</div></div>';
         }
@@ -74,9 +78,10 @@ class wwdLateralList {
         return $result;
     }
 
-    private function render() {
+    private function render()
+    {
 
-        if ( $this->isAuth ) {
+        if ($this->isAuth) {
             $method = '/wp-lat/';
 
             $curl = new wwd_db($method, 'GET', []);
@@ -86,12 +91,11 @@ class wwdLateralList {
 
             if ($err) {
                 $message = $err;
-            }
-            else {
+            } else {
                 $data = json_decode($response, true);
                 $rows = $data["value"];
 
-                usort($rows, array('wwdLateralList','cmp'));
+                usort($rows, array('wwdLateralList', 'cmp'));
 
                 $message = $this->formatTable($rows);
             }

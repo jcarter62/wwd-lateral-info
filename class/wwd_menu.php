@@ -15,19 +15,20 @@ class wwd_menu
      */
     public function __construct()
     {
-        add_filter('wp_get_nav_menu_items', array($this, 'execute'), 20, 2 );
+        add_filter('wp_get_nav_menu_items', array($this, 'execute'), 20, 2);
     }
 
     /**
      * Simple helper function for make menu item objects
      *
-     * @param $title      - menu item title
-     * @param $url        - menu item url
-     * @param $order      - where the item should appear in the menu
+     * @param $title - menu item title
+     * @param $url - menu item url
+     * @param $order - where the item should appear in the menu
      * @param int $parent - the item's parent item
      * @return \stdClass
      */
-    private function custom_nav_menu_item( $title, $url, $order, $parent = 0 ){
+    private function custom_nav_menu_item($title, $url, $order, $parent = 0)
+    {
         $item = new stdClass();
         $item->ID = 1000000 + $order + parent;
         $item->db_id = $item->ID;
@@ -47,23 +48,26 @@ class wwd_menu
         return $item;
     }
 
-    private function logoutURL() {
+    private function logoutURL()
+    {
         $url = wp_logout_url(get_home_url(null, '', null));
         return $url;
     }
 
-    private function loginURL() {
+    private function loginURL()
+    {
         // Ref: https://codex.wordpress.org/Function_Reference/wp_login_url
-        $url = wp_login_url( get_home_url(null, '', null));
+        $url = wp_login_url(get_home_url(null, '', null));
         return $url;
     }
 
-    public function execute($items, $menu) {
-        if ( $menu->slug == 'main' ) {
-            if ( get_current_user_id() ) {
-                $items[] = $this->custom_nav_menu_item('logout', $this->logoutURL(), 99 );
+    public function execute($items, $menu)
+    {
+        if ($menu->slug == 'main') {
+            if (get_current_user_id()) {
+                $items[] = $this->custom_nav_menu_item('logout', $this->logoutURL(), 99);
             } else {
-                $items[] = $this->custom_nav_menu_item('login', $this->loginURL(), 99 );
+                $items[] = $this->custom_nav_menu_item('login', $this->loginURL(), 99);
             }
         }
         return $items;

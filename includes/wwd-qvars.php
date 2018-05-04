@@ -1,6 +1,7 @@
 <?php
 
-class wwd_qvars {
+class wwd_qvars
+{
 
     public function __construct()
     {
@@ -10,8 +11,9 @@ class wwd_qvars {
     //
     // Add Query Variables we need in our plugin.
     //
-    public function execute($vars) {
-        array_push($vars, "id","page");
+    public function execute($vars)
+    {
+        array_push($vars, "id", "page");
         return $vars;
     }
 }

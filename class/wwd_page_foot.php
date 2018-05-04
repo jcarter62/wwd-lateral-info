@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jcarter
- * Date: 4/24/18
- * Time: 8:00 AM
- */
 
 class wwd_page_foot
 {
@@ -13,27 +7,31 @@ class wwd_page_foot
     private $urlBase = '';
     private $url = '';
 
-    public function __construct($currentPage, $pageCount, $urlBase) {
+    public function __construct($currentPage, $pageCount, $urlBase)
+    {
         $this->curPage = $currentPage;
         $this->Pages = $pageCount;
         $this->urlBase = $urlBase;
     }
 
-    private function first() {
+    private function first()
+    {
         $result = '';
         return $result;
     }
 
-    private function buildURL($page) {
-        $result = '<a href="' . $this->urlBase .  $page . '">';
+    private function buildURL($page)
+    {
+        $result = '<a href="' . $this->urlBase . $page . '">';
         return $result;
     }
 
-    public function render() {
+    public function render()
+    {
         $x = '';
         $sep = '</a>&nbsp;';
         $prevPage = $this->curPage - 1;
-        if ( $prevPage < 1 ) {
+        if ($prevPage < 1) {
             $prevPage = 1;
         }
 

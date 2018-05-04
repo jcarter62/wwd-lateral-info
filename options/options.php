@@ -4,23 +4,24 @@
  * Date: 4/21/18
  */
 
-class wwd_lat_info_assets {
+class wwd_lat_info_assets
+{
 
     public function __construct()
     {
         add_action('wp_enqueue_scripts', array($this, 'exec_wp_enqueue_scripts'));
-        add_action('admin_menu', array( $this, 'exec_Options' ));
+        add_action('admin_menu', array($this, 'exec_Options'));
     }
 
     function exec_Options()
     {
         add_menu_page('WWD Lateral Info Settings', 'WWD Lat Info', 'manage_options',
-            'wwdLatInfoAdmin', array($this,'wwdLatInfoAdminPage'), '', 200);
+            'wwdLatInfoAdmin', array($this, 'wwdLatInfoAdminPage'), '', 200);
     }
 
     function wwdLatInfoAdminPage()
     {
-        if ( array_key_exists('submit_admin_update', $_POST ) ) {
+        if (array_key_exists('submit_admin_update', $_POST)) {
             update_option('wwd-apikey', $_POST['inp-apikey']);
             update_option('wwd-apiurl', $_POST['inp-apiurl']);
             update_option('wwd-pagesize', $_POST['inp-pagesize']);
@@ -53,7 +54,8 @@ class wwd_lat_info_assets {
                 <label for="inp-apikey">KEY:</label>
                 <textarea name="inp-apikey" class="large-text"><?php print $apikey; ?></textarea>
                 <label for="inp-pagesize">Page Size:</label>
-                <input type="number" name="inp-pagesize" class="large-text" placeholder="Number" value="<?php print $pagesize; ?>">
+                <input type="number" name="inp-pagesize" class="large-text" placeholder="Number"
+                       value="<?php print $pagesize; ?>">
 
                 <label for="inp-role">Role Required for Viewing:</label>
                 <select name="inp-role">
@@ -125,8 +127,9 @@ class wwd_lat_info_assets {
         <?php
     }
 
-    function exec_wp_enqueue_scripts() {
-        $root = plugin_dir_url( WWD_LAT_INFO_BASE );
+    function exec_wp_enqueue_scripts()
+    {
+        $root = plugin_dir_url(WWD_LAT_INFO_BASE);
         $url = $root . 'css/style.css';
         wp_enqueue_style('my-css-file', $url, '', time());
     }

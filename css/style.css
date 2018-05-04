@@ -1,16 +1,16 @@
-.zebra  tr:nth-child(even) {
+.zebra tr:nth-child(even) {
     color: #fff;
     background-color: #2b8ad3;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-.zebra  tr:nth-child(even) a {
+.zebra tr:nth-child(even) a {
     color: #fff;
     background-color: #2b8ad3;
 }
 
-.zebra  tr:nth-child(odd) a {
+.zebra tr:nth-child(odd) a {
     color: #000;
     background-color: #fff;
 }
@@ -48,7 +48,6 @@
 /*h2 {  font-size: 5.0vh;  }*/
 /*h3 { font-size: 4.0vh;}*/
 /*body { font-size: 3.0vmin; }*/
-
 
 .spinner {
     background: url('/wp-admin/images/wpspin_light.gif') no-repeat;
