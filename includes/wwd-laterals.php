@@ -58,17 +58,15 @@ class wwdLateralList
     //
     private function formatTable($rows)
     {
-        $rownum = 0;
-        $result = '<div class="container">';
+        $result = '<div id="wwd_table" class="container">';
         $result .= '<div class="row large"><div class="col">Lateral</div></div>';
 
         $oddrow = new wwd_oddrow('oddrow');
         foreach ($rows as $row) {
-            $rownum += 1;
             $link = '/lateral?id=' . $row["id"];
-
-            $onclick = 'onclick="location.href=\'' . $link . '\'";';
+            $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\');"';
             $class = 'class="row large ' . $oddrow->getClass() . '"';
+
             $result .= '<div ' . $class . '><div class="col" ' . $onclick . '>'
                 . $row["LatName"]
                 . '</div></div>';

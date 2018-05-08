@@ -54,7 +54,7 @@ class wwdAccounts
     private function formatTable($rows, $pg)
     {
         $rownum = 0;
-        $result = '<div class="container">'
+        $result = '<div id="wwd_table" class="container">'
             . '<div class="row large">'
             . '<div class="col">Account</div>'
             . '<div class="col">Account Name</div>'
@@ -63,7 +63,8 @@ class wwdAccounts
         $oddrow = new wwd_oddrow('oddrow');
         foreach ($rows as $row) {
             $link = '/' . $this->accountSlug . '/?id=' . $row["id"];
-            $onclick = 'onclick="location.href=\'' . $link . '\'";';
+//            $onclick = 'onclick="location.href=\'' . $link . '\'";';
+            $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\');"';
             $result .= '<div class="row large ' . $oddrow->getClass() . '" ' . $onclick . '>'
                 . '<div class="col-3">' . $row["id"] . '</div>'
                 . '<div class="col-8">' . $row["FullName"] . '</div>'
@@ -139,7 +140,9 @@ class wwdAccounts
         $output .= '<form method="post" action=""><span>';
         $output .= '<input type="text" value="' . $term . '" name="searchterm">';
 
-        $output .= '<input type="submit" name="accounts_search" class="button button-primary" value="Search">';
+        $output .= '<input type="submit" name="accounts_search" 
+                class="button button-primary" 
+                value="Search" onclick="wwd_dimTable();">';
 
         $output .= '</span></form>';
         return $output;

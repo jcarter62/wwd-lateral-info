@@ -58,7 +58,7 @@ class wwdMeters
 
             $data = $json['value'];
 
-            $output = '<div class="container">';
+            $output = '<div id="wwd_table" class="container">';
             $output .= '<div class="row large">'
                 . '<div class="col-3">Meter ID</div>'
                 . '<div class="col-6">Geo</div>'
@@ -73,14 +73,15 @@ class wwdMeters
             $oddrow = new wwd_oddrow('oddrow');
             foreach ($data as $row) {
                 $class = $oddrow->getClass();
-                $link = '<a href="/' . $this->meterSlug . '/?id=' . $row['meter'] . '">';
-                $output .= $link
-                    . '<div class="row ' . $class . ' large">'
+
+                $link = '/' . $this->meterSlug . '/?id=' . $row["meter"];
+                $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\');"';
+
+                $output .= '<div class="row ' . $class . ' large" '. $onclick . '>'
                     . '<div class="col-3">' . $row['meter'] . '</div>'
                     . '<div class="col-6">' . $row['geo'] . '</div>'
                     . '<div class="col-3">' . $row['latname'] . '</div>'
                     . '</div></a>';
-
             }
             $output .= '</div>'; // container
         }

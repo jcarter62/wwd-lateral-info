@@ -43,6 +43,10 @@
     cursor: pointer;
 }
 
+.loading {
+    opacity: 0.60;
+}
+
 /*https://css-tricks.com/viewport-sized-typography/ */
 /*h1 {  font-size: 7.0vw;  }*/
 /*h2 {  font-size: 5.0vh;  }*/

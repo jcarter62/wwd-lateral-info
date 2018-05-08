@@ -53,12 +53,13 @@ class wwdAccount
 
     private function lateralRow($lateral, $class)
     {
-        $qt = '"';
-        $link = '<a href=' . $qt . '/' . $this->lateralSlug . '/?id=' . $lateral . $qt . '>';
+        $link = '/'.$this->lateralSlug.'/?id='.$lateral;
+        $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\')"';
+
         $rowClass = 'row large ' . $class;
-        $output = $link . '<div class="' . $rowClass . '">';
+        $output = '<div class="' . $rowClass . '" '. $onclick . ' >';
         $output .= '<div class="col">' . $lateral . '</div>';
-        $output .= '</div></a>';
+        $output .= '</div>';
         return $output;
     }
 
@@ -75,12 +76,12 @@ class wwdAccount
 
     private function meterRow($data, $class)
     {
-        $qt = '"';
-        $mlink = '<a href=' . $qt . '/' . $this->meterSlug . '/?id=' . $data['meterid'] . $qt . '>';
+        $link = '/'.$this->meterSlug .'/?id='. $data['meterid'] ;
+        $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\')"';
         $rowClass = 'row large ' . $class;
-        $output = '<div class="' . $rowClass . '">';
+        $output = '<div class="' . $rowClass . '" '. $onclick . ' >';
         $output .= '<div class="col">' . $data['lateralname'] . '</div>';
-        $output .= '<div class="col">' . $mlink . $data['meterid'] . '</a></div>';
+        $output .= '<div class="col">' .  $data['meterid'] . '</div>';
         $output .= '<div class="col">' . $data['geo'] . '</div>';
         $output .= '</div>';
         return $output;
@@ -219,10 +220,12 @@ class wwdAccount
         $output = '';
 
         if ($this->isAuth) {
+            $output .= '<div id="wwd_table">';
             $output .= $this->getAccountAddress();
             $output .= $this->getAccountContacts();
             $output .= $this->getAccountLaterals();
             $output .= $this->getAccountMeters();
+            $output .= '</div>';
 
             $Result = $output;
         } else {

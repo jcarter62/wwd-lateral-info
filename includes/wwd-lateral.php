@@ -52,13 +52,17 @@ class wwdLateralInfo
 
     private function wwd_cell($data, $slug)
     {
-        $output = '<div class="col">';
         if ($slug > '') {
-            $output .= '<a href="/' . $slug . '/?id=' . $data . '">';
+            $link = $slug . '/?id=' . $data;
+            $output = '<div class="col" '
+                . 'onclick="wwd_gotoLink(\'' . $link . '\')">'
+                . '<strong>';
+        } else {
+            $output = '<div class="col">';
         }
         $output .= $data;
         if ($slug > '') {
-            $output .= '</a>';
+            $output .= '</strong>';
         }
         $output .= '</div>';
         return $output;
@@ -70,7 +74,7 @@ class wwdLateralInfo
     //
     private function formatTable($rows)
     {
-        $result = '<div class="container">';
+        $result = '<div id="wwd_table" class="container">';
 
         $result .= $this->wwd_header();
         $oddrow = new wwd_oddrow('oddrow');

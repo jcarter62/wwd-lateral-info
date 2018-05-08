@@ -131,7 +131,11 @@ class wwd_lat_info_assets
     {
         $root = plugin_dir_url(WWD_LAT_INFO_BASE);
         $url = $root . 'css/style.css';
+
         wp_enqueue_style('my-css-file', $url, '', time());
+
+        $jsURL = $root . 'js/wwd_scripts.js';
+        wp_enqueue_script('my-js-file', $jsURL, '', null, true );
     }
 }
 

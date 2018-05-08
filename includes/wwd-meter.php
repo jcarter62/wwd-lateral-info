@@ -107,18 +107,6 @@ class wwdMeter
         return $output;
     }
 
-    /*
-     * call api: method = wp-sp-meteraccounts
-     * method: post
-     * payload: { "meterid":"12345" }
-     *
-     * Output: Example
-     * {
-     * "@odata.context":"https://cdata.api.wwddata.com/$metadata#Collection(CData.wp-sp-meterAccountsOutput)",
-     * "value":[
-     *  {"fullname": "GRAGNANI, MICHAEL & LISA", "lateral": "11R", "meter": "111020", "account": "3785"}
-     * ]}
-     */
     private function getMeterAccounts()
     {
         $output = '';
@@ -147,9 +135,10 @@ class wwdMeter
             $oddrow = new wwd_oddrow('oddrow');
             foreach ($data as $row) {
                 $class = $oddrow->getClass();
-                $link = '<a href="/' . $this->accountSlug . '/?id=' . $row['account'] . '">';
-                $output .= $link
-                    . '<div class="row ' . $class . ' large">'
+//                $link = '<a href="/' . $this->accountSlug . '/?id=' . $row['account'] . '">';
+                $link = '/' . $this->accountSlug . '/?id=' . $row['account'];
+                $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\')"';
+                $output .= '<div class="row ' . $class . ' large" '. $onclick . ' >'
                     . '<div class="col-3">' . $row['account'] . '</div>'
                     . '<div class="col-8">' . $row['fullname'] . '</div>'
                     . '</div></a>';
@@ -165,8 +154,10 @@ class wwdMeter
         $output = '';
 
         if ($this->isAuth) {
+            $output .= '<div id="wwd_table">';
             $output .= $this->getMeterDetails();
             $output .= $this->getMeterAccounts();
+            $output .= '</div>';
 
             $Result = $output;
         } else {
