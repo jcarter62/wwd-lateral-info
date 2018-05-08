@@ -3,7 +3,8 @@
 class wwd_auth
 {
     // This is the required role for users allowed to view WWD Information.
-    private $PLUGIN_ROLE = 'WWDVIEW';
+    private $PluginRole = '';
+    private $AdminRole = '';
 
     // Interal flag used to determine if the user is "authenticated",
     // based on being a member of the role above.
@@ -14,7 +15,8 @@ class wwd_auth
     {
         $this->isAuthenticated = false;
         $this->username = '';
-        $this->PLUGIN_ROLE = get_option('wwd-role', 'WWDVIEW');
+        $this->PluginRole = strtoupper(get_option('wwd-role','wwdview'));
+        $this->AdminRole = strtoupper('administrator');
     }
 
     public function isIsAuthenticated()
@@ -30,13 +32,15 @@ class wwd_auth
     {
         $this->isAuthenticated = false;
         $isLoggedIn = is_user_logged_in();
+
         if ($isLoggedIn) {
             $this->username = wp_get_current_user()->user_login;
             $id = wp_get_current_user()->ID;
             $meta = get_user_meta($id, 'wp_capabilities', false);
             foreach ($meta[0] as $key => $value) {
                 $k = strtoupper($key);
-                if (($k == $this->PLUGIN_ROLE) or ($k == 'ADMINISTRATOR')) {
+                if (($k == $this->PluginRole) or
+                    ($k == $this->AdminRole)) {
                     $this->isAuthenticated = true;
                 }
             }
