@@ -2,7 +2,7 @@
 /*
 Plugin Name: wwd-lateral-info
 Description: Internal plugin for WWD to provide lateral information.
-Version: 1.1.0
+Version: 1.2.0
 Author: WWD
 Author URI: https://wwd.ca.gov/
 */
