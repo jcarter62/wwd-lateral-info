@@ -18,3 +18,14 @@ function wwd_dimTable() {
         elem.innerHTML = '<h3>Loading ' + Array( i + 1 ).join('.') + '</h3>';
     }, 500);
 }
+
+function wwd_menu_onclick() {
+    //
+    // Attach on click menu to the main-menu
+    //
+    let elem = document.getElementById('menu-main');
+    elem.onclick = wwd_dimTable;
+}
+
+wwd_menu_onclick();
+

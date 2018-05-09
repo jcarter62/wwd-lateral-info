@@ -112,7 +112,10 @@ class wwdMeters
         $output .= '<form method="post" action=""><span>';
         $output .= '<input type="text" value="' . $term . '" name="searchterm">';
 
-        $output .= '<input type="submit" name="meter_search" class="button button-primary" value="Search" >';
+        $output .= '<input type="submit" 
+                name="meter_search" 
+                class="button button-primary" 
+                value="Search" onclick="wwd_dimTable();"  >';
 
         $output .= '</span></form>';
         return $output;
