@@ -1,11 +1,20 @@
 <?php
-/*
-Plugin Name: wwd-lateral-info
-Description: Internal plugin for WWD to provide lateral information.
-Version: 1.3.0
-Author: WWD
-Author URI: https://wwd.ca.gov/
-*/
+/**
+ * Plugin Name: wwd-lateral-info
+ * Version: 1.3.1
+ * Plugin URI: https://jcarter62.wordpress.com/wwd-lateral-info/
+ * Description: Internal plugin for WWD to provide lateral information.
+ * Author: WWD
+ * Author URI: https://wwd.ca.gov
+ * Text Domain: wwd-lateral-info
+ */
+/**
+ * @Author WWD
+ * @Copyright (c) 2018. Westlands Water District. (https://wwd.ca.gov)
+ * This code is released under the GPL licence version 3 or later, available here
+ * http://www.gnu.org/licenses/gpl.txt
+ *
+ */
 
 if (!defined('WWD_LAT_INFO_DIR')) {
     define('WWD_LAT_INFO_DIR', dirname(__FILE__));

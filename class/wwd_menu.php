@@ -1,14 +1,16 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jcarter
- * Date: 4/30/18
- * Time: 8:28 AM
+ * @Author WWD
+ * @Copyright (c) 2018. Westlands Water District. (https://wwd.ca.gov)
+ * This code is released under the GPL licence version 3 or later, available here
+ * http://www.gnu.org/licenses/gpl.txt
+ *
  */
 
 class wwd_menu
 {
 
+    // Part of this class was implemented with the help of the following:
     // Ref: https://www.daggerhart.com/dynamically-add-item-to-wordpress-menus/
     /**
      * wwd_menu constructor.
@@ -48,6 +50,10 @@ class wwd_menu
         return $item;
     }
 
+    /*
+     * The purpose of the following methods are to add a Login or Logout menu
+     * to the main menu.
+     */
     private function logoutURL()
     {
         $url = wp_logout_url(get_home_url(null, '', null));
