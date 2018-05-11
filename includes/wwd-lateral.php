@@ -17,6 +17,7 @@ class wwdLateralInfo
     private $id = '';
     private $accountSlug = '';
     private $meterSlug = '';
+    private $colums = Array();
 
     /**
      * wwdLateralInfo constructor.
@@ -24,6 +25,13 @@ class wwdLateralInfo
     public function __construct()
     {
         add_shortcode('wwd-lateral', array($this, 'execute'));
+        $this->colums = Array(
+            "Lateral"=>1,
+            "Meter"=>2,
+            "Geo"=>3,
+            "Account"=>2,
+            "Name"=>4
+        );
     }
 
     /**
@@ -45,27 +53,33 @@ class wwdLateralInfo
         return $info;
     }
 
+    private function getCol($col) {
+        $out = 'col-';
+        $out .= $this->colums[$col];
+        return $out;
+    }
+
     private function wwd_header()
     {
         $result = '<div class="row medium">'
-            . '<div class="col">Lateral</div>'
-            . '<div class="col">Meter</div>'
-            . '<div class="col">Geo</div>'
-            . '<div class="col">Account</div>'
-            . '<div class="col">Name</div>'
+            . '<div class="'.$this->getCol("Lateral").'">Lateral</div>'
+            . '<div class="'.$this->getCol("Meter").'">Meter</div>'
+            . '<div class="'.$this->getCol("Geo").'">Geo</div>'
+            . '<div class="'.$this->getCol("Account").'">Account</div>'
+            . '<div class="'.$this->getCol("Name").'">Name</div>'
             . '</div>';
         return $result;
     }
 
-    private function wwd_cell($data, $slug)
+    private function wwd_cell($data, $slug, $column)
     {
         if ($slug > '') {
             $link = $slug . '/?id=' . $data;
-            $output = '<div class="col" '
+            $output = '<div class="'.$this->getCol($column).'" '
                 . 'onclick="wwd_gotoLink(\'' . $link . '\')">'
                 . '<strong>';
         } else {
-            $output = '<div class="col">';
+            $output = '<div class="'.$this->getCol($column).'">';
         }
         $output .= $data;
         if ($slug > '') {
@@ -87,11 +101,11 @@ class wwdLateralInfo
         $oddrow = new wwd_oddrow('oddrow');
         foreach ($rows as $row) {
             $result .= '<div class="row medium ' . $oddrow->getClass() . '">'
-                . $this->wwd_cell($row['lateral'], '')
-                . $this->wwd_cell($row['meter'], $this->meterSlug)
-                . $this->wwd_cell($row['geo'], '')
-                . $this->wwd_cell($row['account'], $this->accountSlug)
-                . $this->wwd_cell($row['fullname'], '')
+                . $this->wwd_cell($row['lateral'], '', 'Lateral')
+                . $this->wwd_cell($row['meter'], $this->meterSlug, 'Meter')
+                . $this->wwd_cell($row['geo'], '', 'Geo')
+                . $this->wwd_cell($row['account'], $this->accountSlug, 'Account')
+                . $this->wwd_cell($row['fullname'], '', 'Name')
                 . '</div>';
         }
 

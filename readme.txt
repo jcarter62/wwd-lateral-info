@@ -22,6 +22,11 @@ in the future to allow public to view some non critical data about systems.
 
 == Changelog ==
 
+= 1.3.2 - 2018-05-11 =
+* Modified lateral columns to fit to content better.
+* Fixed account list column headers to match data columns.
+* Removed unused code/comments.
+
 = 1.3.1 - 2018-05-10 =
 * Add copyright and prep for publish.
 

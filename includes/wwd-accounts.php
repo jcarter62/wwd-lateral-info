@@ -60,17 +60,15 @@ class wwdAccounts
     //
     private function formatTable($rows, $pg)
     {
-        $rownum = 0;
         $result = '<div id="wwd_table" class="container">'
             . '<div class="row large">'
-            . '<div class="col">Account</div>'
-            . '<div class="col">Account Name</div>'
+            . '<div class="col-3">Account</div>'
+            . '<div class="col-8">Account Name</div>'
             . '</div>';
 
         $oddrow = new wwd_oddrow('oddrow');
         foreach ($rows as $row) {
             $link = '/' . $this->accountSlug . '/?id=' . $row["id"];
-//            $onclick = 'onclick="location.href=\'' . $link . '\'";';
             $onclick = 'onclick="wwd_gotoLink(\'' . $link . '\');"';
             $result .= '<div class="row large ' . $oddrow->getClass() . '" ' . $onclick . '>'
                 . '<div class="col-3">' . $row["id"] . '</div>'

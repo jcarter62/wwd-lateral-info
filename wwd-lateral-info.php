@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: wwd-lateral-info
- * Version: 1.3.1
+ * Version: 1.3.2
  * Plugin URI: https://jcarter62.wordpress.com/wwd-lateral-info/
  * Description: Internal plugin for WWD to provide lateral information.
  * Author: WWD
@@ -27,13 +27,13 @@ if (!defined('WWD_LAT_INFO_BASE')) {
 require WWD_LAT_INFO_DIR . '/options/options.php';
 
 // Classes
-require WWD_LAT_INFO_DIR . '/class/wwd_api_info.php';
-require WWD_LAT_INFO_DIR . '/class/wwd_auth.php';
-require WWD_LAT_INFO_DIR . '/class/wwd_page_foot.php';
-require WWD_LAT_INFO_DIR . '/class/wwd_auth_msg.php';
-require WWD_LAT_INFO_DIR . '/class/wwd_menu.php';
-require WWD_LAT_INFO_DIR . '/class/wwd_oddrow.php';
-require WWD_LAT_INFO_DIR . '/class/wwd_db.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_api_info.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_auth.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_page_foot.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_auth_msg.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_menu.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_oddrow.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_db.php';
 
 require WWD_LAT_INFO_DIR . '/includes/wwd-qvars.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-laterals.php';
