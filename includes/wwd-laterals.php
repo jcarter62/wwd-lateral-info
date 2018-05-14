@@ -20,7 +20,6 @@ class wwdLateralList
         add_shortcode('wwd-lat-list', array($this, 'execute'));
     }
 
-
     /**
      * execute: Execute shortcode for this class.
      */
@@ -89,15 +88,12 @@ class wwdLateralList
         if ($this->isAuth) {
             $method = '/wp-lat/';
 
-            $curl = new wwd_db($method, 'GET', []);
-            $response = $curl->exec();
-            $err = $curl->error();
-            $curl->close();
+            $response = new wwd_data($method, 'GET', null);
 
-            if ($err) {
-                $message = $err;
+            if ( $response->Err() ) {
+                $message = $response->ErrorMessage();
             } else {
-                $data = json_decode($response, true);
+                $data = json_decode($response -> get_data() , true);
                 $rows = $data["value"];
 
                 usort($rows, array('wwdLateralList', 'cmp'));

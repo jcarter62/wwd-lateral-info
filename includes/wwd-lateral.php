@@ -41,11 +41,12 @@ class wwdLateralInfo
      */
     public function execute()
     {
+        $set = new wwd_settings();
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
 
-        $this->accountSlug = get_option('wwd-page-account');
-        $this->meterSlug = get_option('wwd-page-meter');
+        $this->accountSlug = $set->get('wwd-page-account');
+        $this->meterSlug = $set->get('wwd-page-meter');
 
         $this->id = get_query_var('id', '');
         $info = $this->render();
@@ -119,15 +120,12 @@ class wwdLateralInfo
             $method = '/wp-meterbylat/';
             $data = ['lateral' => $this->id];
 
-            $curl = new wwd_db($method, 'POST', $data);
-            $response = $curl->exec();
-            $err = $curl->error();
-            $curl->close();
+            $response = new wwd_data($method, 'POST', $data);
 
-            if ($err) {
-                $message = $err;
+            if ($response->Err()) {
+                $message = $response->ErrorMessage();
             } else {
-                $data = json_decode($response, true);
+                $data = json_decode($response->get_data(), true);
                 $rows = $data["value"];
                 $results = $this->formatTable($rows);
 

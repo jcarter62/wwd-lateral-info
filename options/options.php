@@ -24,29 +24,33 @@ class wwd_lat_info_assets
 
     function wwdLatInfoAdminPage()
     {
+        $set = new wwd_settings();
+        $userid = get_current_user_id();
+
         if (array_key_exists('submit_admin_update', $_POST)) {
-            update_option('wwd-apikey', $_POST['inp-apikey']);
-            update_option('wwd-apiurl', $_POST['inp-apiurl']);
-            update_option('wwd-pagesize', $_POST['inp-pagesize']);
-            update_option('wwd-role', $_POST['inp-role']);
+            // Check to see if this is a valid source.
+            if ( wp_verify_nonce($_POST['_wpnonce'], 'update-data_' . $userid )  ) {
+                $set->save('wwd-apikey', $_POST['inp-apikey']);
+                $set->save('wwd-apiurl', $_POST['inp-apiurl']);
+                $set->save('wwd-role', $_POST['inp-role']);
 
-            update_option('wwd-page-lateral', $_POST['inp-page-lateral']);
-            update_option('wwd-page-meter', $_POST['inp-page-meter']);
-            update_option('wwd-page-account', $_POST['inp-page-account']);
+                $set->save('wwd-page-lateral', $_POST['inp-page-lateral']);
+                $set->save('wwd-page-meter', $_POST['inp-page-meter']);
+                $set->save('wwd-page-account', $_POST['inp-page-account']);
 
-            ?>
-            <div>Updated!!</div>
-            <?php
+                ?>
+                <div>Updated!!</div>
+                <?php
+            }
         }
 
-        $apikey = get_option('wwd-apikey', '');
-        $apiurl = get_option('wwd-apiurl', '');
-        $pagesize = get_option('wwd-pagesize', '');
-        $role = get_option('wwd-role');
+        $apikey = $set->get('wwd-apikey', '');
+        $apiurl = $set->get('wwd-apiurl', '');
+        $role = $set->get('wwd-role', '');
 
-        $pageLateral = get_option('wwd-page-lateral');
-        $pageMeter = get_option('wwd-page-meter');
-        $pageAccount = get_option('wwd-page-account');
+        $pageLateral = $set->get('wwd-page-lateral', '');
+        $pageMeter = $set->get('wwd-page-meter', '');
+        $pageAccount = $set->get('wwd-page-account', '');
 
         ?>
         <div class="wrap">
@@ -56,9 +60,6 @@ class wwd_lat_info_assets
                 <textarea name="inp-apiurl" class="large-text"><?php print $apiurl; ?></textarea>
                 <label for="inp-apikey">KEY:</label>
                 <textarea name="inp-apikey" class="large-text"><?php print $apikey; ?></textarea>
-                <label for="inp-pagesize">Page Size:</label>
-                <input type="number" name="inp-pagesize" class="large-text" placeholder="Number"
-                       value="<?php print $pagesize; ?>">
 
                 <label for="inp-role">Role Required for Viewing:</label>
                 <select name="inp-role">
@@ -86,6 +87,8 @@ class wwd_lat_info_assets
 
                 <input type="submit" name="submit_admin_update"
                        class="button button-primary" value="UPDATE SETTINGS">
+
+                <?php wp_nonce_field('update-data_' . $userid ) ?>
             </form>
             <hr>
             <h2>Plugin Short codes:</h2>

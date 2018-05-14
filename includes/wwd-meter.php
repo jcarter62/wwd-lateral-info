@@ -21,10 +21,11 @@ class wwdMeter
 
     public function execute()
     {
+        $set = new wwd_settings();
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
         $this->meterid = get_query_var('id', '0');
-        $this->accountSlug = get_option('wwd-page-account');
+        $this->accountSlug = $set->get('wwd-page-account');
 
         return $this->render();
     }
@@ -68,19 +69,15 @@ class wwdMeter
 
     private function getMeterDetails()
     {
-        $output = '';
         $method = '/wp-v-wtr-asset(' . $this->meterid . ')';
 
-        $curl = new wwd_db($method, 'GET', []);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'GET', null);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err() ) {
+            $output = $response->ErrorMessage();
         } else {
             $odd = new wwd_oddrow('oddrow');
-            $data = json_decode($response, true);
+            $data = json_decode( $response->get_data(), true);
             $output = '<div class="container">';
             //    "meter_id": "11005",
             $output .= $this->meterDetailRow('Meter ID', $data['meter_id'], $odd->getClass());
@@ -116,19 +113,15 @@ class wwdMeter
 
     private function getMeterAccounts()
     {
-        $output = '';
         $method = '/wp-sp-meteraccounts/';
         $formData = ['meterid' => $this->meterid];
 
-        $curl = new wwd_db($method, 'POST', $formData);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'POST', $formData);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err() ) {
+            $output = $response->ErrorMessage();
         } else {
-            $json = json_decode($response, true);
+            $json = json_decode($response->get_data(), true);
 
             $data = $json['value'];
 

@@ -20,9 +20,10 @@ class wwd_auth
 
     public function __construct()
     {
+        $set = new wwd_settings();
         $this->isAuthenticated = false;
         $this->username = '';
-        $this->PluginRole = strtoupper(get_option('wwd-role','wwdview'));
+        $this->PluginRole = strtoupper($set->get('wwd-role','wwdview'));
         $this->AdminRole = strtoupper('administrator');
     }
 

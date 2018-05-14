@@ -14,6 +14,7 @@ class wwd_auth_msg
      */
     public function notAuthorized()
     {
+        $set = new wwd_settings();
         $thisUserId = get_current_user_id();
         if ($thisUserId <= 0) {
             $UserMessage = 'You are not logged in.';
@@ -23,7 +24,7 @@ class wwd_auth_msg
             $UserMessage = 'Your role is: ' . $thisUserRole;
         }
 
-        $role = get_option('wwd-role', 'undefined');
+        $role = $set->get('wwd-role', 'undefined');
         $result = 'You are not authorized to view ths content. <br>'
             . 'Users need to be logged in, as well as be a member of the group '
             . '"' . $role . '".<br> '

@@ -33,8 +33,9 @@ class wwd_api_info
      */
     public function __construct()
     {
-        $this->apikey = get_option('wwd-apikey', '');
-        $this->apiurl = get_option('wwd-apiurl', '');
+        $set = new wwd_settings();
+        $this->apikey = $set->get('wwd-apikey', '');
+        $this->apiurl = $set->get('wwd-apiurl', '');
     }
 
 }

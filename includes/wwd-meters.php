@@ -21,9 +21,10 @@ class wwdMeters
 
     public function execute()
     {
+        $set = new wwd_settings();
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
-        $this->meterSlug = get_option('wwd-page-meter');
+        $this->meterSlug = $set->get('wwd-page-meter');
 
         if (array_key_exists('meter_search', $_POST)) {
             $this->search = $_POST['searchterm'];
@@ -49,20 +50,15 @@ class wwdMeters
 
     private function getMeterList()
     {
-        $output = '';
         $method = '/wp-sp-meters/';
         $formData = [];
 
-        $curl = new wwd_db($method, 'POST', $formData);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'POST', $formData);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err()) {
+            $output = $response->ErrorMessage();
         } else {
-            $json = json_decode($response, true);
-
+            $json = json_decode($response ->get_data(), true);
             $data = $json['value'];
 
             $output = '<div id="wwd_table" class="container">';

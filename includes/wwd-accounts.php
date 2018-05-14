@@ -11,8 +11,6 @@ class wwdAccounts
 {
     private $auth;
     private $isAuth = false;
-    private $pagesize;
-    private $page;
     private $search = '';
     private $accountSlug = '';
 
@@ -23,17 +21,16 @@ class wwdAccounts
 
     public function execute()
     {
+        $set = new wwd_settings();
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
-        $this->pagesize = get_option('wwd-pagesize', 5);
-        $this->page = get_query_var('page', '0');
-        $this->accountSlug = get_option('wwd-page-account');
+        $this->accountSlug = $set->get('wwd-page-account');
 
         if (array_key_exists('accounts_search', $_POST)) {
             $this->search = $_POST['searchterm'];
         }
 
-        return $this->render($this->page);
+        return $this->render();
     }
 
     /**
@@ -95,25 +92,19 @@ class wwdAccounts
         return $output;
     }
 
-    public function render($pg)
+    public function render()
     {
         $output = '';
 
-        if ($pg == 0) {
-            $pg = 1;
-        }
-
         if ($this->isAuth) {
             $method = '/wmis-accountlist/';
-            $curl = new wwd_db($method, 'GET', []);
-            $response = $curl->exec();
-            $err = $curl->error();
-            $curl->close();
 
-            if ($err) {
-                $output = $err;
+            $response = new wwd_data($method, 'GET', null);
+
+            if ( $response->Err() ) {
+                $output = $response->ErrorMessage();
             } else {
-                $data = json_decode($response, true);
+                $data = json_decode($response->get_data(), true);
                 $rows = $data["value"];
 
                 if ($this->search > '') {

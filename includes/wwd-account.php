@@ -22,12 +22,13 @@ class wwdAccount
 
     public function execute()
     {
+        $set = new wwd_settings();
         $this->auth = new wwd_auth();
         $this->isAuth = $this->auth->isIsAuthenticated();
         $this->account = get_query_var('id', '0');
 
-        $this->lateralSlug = get_option('wwd-page-lateral');
-        $this->meterSlug = get_option('wwd-page-meter');
+        $this->lateralSlug = $set->get('wwd-page-lateral');
+        $this->meterSlug = $set->get('wwd-page-meter');
 
         return $this->render();
     }
@@ -96,19 +97,15 @@ class wwdAccount
 
     private function getAccountAddress()
     {
-        $output = '';
         $method = '/wmis-account(' . $this->account . ')';
 
-        $curl = new wwd_db($method, 'GET', []);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'GET', null);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err() ) {
+            $output = $response->ErrorMessage();
         } else {
             $odd = new wwd_oddrow('oddrow');
-            $data = json_decode($response, true);
+            $data = json_decode($response->get_data(), true);
             $output = '<div class="container">';
 
             $csz = $data['City'] . ' ' . $data['State'] . ' ' . $data['Zip'] . ' ';
@@ -126,20 +123,16 @@ class wwdAccount
 
     private function getAccountContacts()
     {
-        $output = '';
         $method = '/wp-sp-api-acctcontacts/';
         $formData = ['account' => $this->account];
 
-        $curl = new wwd_db($method, 'POST', $formData);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'POST', $formData);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err() ) {
+            $output = $response->ErrorMessage();
         } else {
             $odd = new wwd_oddrow('oddrow');
-            $json = json_decode($response, true);
+            $json = json_decode($response->get_data(), true);
             $data = $json["value"];
 
             $output = '<div class="container">';
@@ -161,21 +154,17 @@ class wwdAccount
 
     private function getAccountLaterals()
     {
-        $output = '';
         $method = '/wp-sp-accountlats/';
 
         $formData = ['account' => $this->account];
 
-        $curl = new wwd_db($method, 'POST', $formData);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'POST', $formData);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err() ) {
+            $output = $response->ErrorMessage();
         } else {
             $odd = new wwd_oddrow('oddrow');
-            $json = json_decode($response, true);
+            $json = json_decode($response->get_data(), true);
             $data = $json["value"];
 
             $output = '<div class="container">';
@@ -191,20 +180,16 @@ class wwdAccount
 
     private function getAccountMeters()
     {
-        $output = '';
         $method = '/wp-sp-accountMeters/';
         $formData = ['account' => $this->account];
 
-        $curl = new wwd_db($method, 'POST', $formData);
-        $response = $curl->exec();
-        $err = $curl->error();
-        $curl->close();
+        $response = new wwd_data($method, 'POST', $formData);
 
-        if ($err) {
-            $output = $err;
+        if ( $response->Err() ) {
+            $output = $response->ErrorMessage();
         } else {
             $odd = new wwd_oddrow('oddrow');
-            $json = json_decode($response, true);
+            $json = json_decode($response->get_data(), true);
             $data = $json["value"];
 
             $output = '<div class="container">';

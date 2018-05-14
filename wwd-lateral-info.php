@@ -33,7 +33,8 @@ require_once WWD_LAT_INFO_DIR . '/class/wwd_page_foot.php';
 require_once WWD_LAT_INFO_DIR . '/class/wwd_auth_msg.php';
 require_once WWD_LAT_INFO_DIR . '/class/wwd_menu.php';
 require_once WWD_LAT_INFO_DIR . '/class/wwd_oddrow.php';
-require_once WWD_LAT_INFO_DIR . '/class/wwd_db.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_data.php';
+require_once WWD_LAT_INFO_DIR . '/class/wwd_settings.php';
 
 require WWD_LAT_INFO_DIR . '/includes/wwd-qvars.php';
 require WWD_LAT_INFO_DIR . '/includes/wwd-laterals.php';
